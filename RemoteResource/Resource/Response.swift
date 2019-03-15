@@ -27,18 +27,32 @@ enum ValidationType {
     
     /// Validate only the given status codes.
     case customCodes([Int])
+}
+
+extension ValidationType {
     
-    /// The list of HTTP status codes to validate.
-    var statusCodes: [Int] {
+    func validateStatusCode(_ statusCode: Int) -> Bool {
         switch self {
-        case .successCodes:
-            return Array(200..<300)
-        case .successAndRedirectCodes:
-            return Array(200..<400)
-        case .customCodes(let codes):
-            return codes
         case .none:
-            return []
+            return true
+        
+        case .successCodes:
+            return isValidSuccessCode(statusCode)
+        
+        case .successAndRedirectCodes:
+            return isValidSuccessCode(statusCode)
+                   && isRedirectCode(statusCode)
+        
+        case .customCodes(let range):
+            return range.contains(statusCode)
         }
+    }
+    
+    func isValidSuccessCode(_ statusCode: Int) -> Bool {
+        return statusCode >= 200 && statusCode <= 299
+    }
+    
+    func isRedirectCode(_ statusCode: Int) -> Bool {
+        return statusCode >= 300 && statusCode <= 399
     }
 }

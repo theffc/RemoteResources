@@ -9,9 +9,10 @@
 import Foundation
 
 public protocol URLSessionProtocol {
+
     func dataTask(
         with request: NSURLRequest,
-        completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
+        completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
     ) -> URLSessionDataTaskProtocol
 }
 
@@ -28,10 +29,10 @@ extension URLSession: URLSessionProtocol {
 
     public func dataTask(
         with request: NSURLRequest,
-        completionHandler: @escaping (Data?, URLResponse?, Error?) -> Void
+        completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
     ) -> URLSessionDataTaskProtocol
     {
-        let urlRequest = request as URLRequest
+        let urlRequest = request
         let task = dataTask(with: urlRequest, completionHandler: completionHandler)
         return task as URLSessionDataTaskProtocol
     }
@@ -69,36 +70,52 @@ public class URLSessionDispatcher: NetworkDispatcher {
             payload: parameters,
             headers: headers
         ) else {
-            completion(NetworkingResponse(
+            completion(NetworkResponse(
                 // TODO: improve error handling
-                request: request, httpResponse: nil, result: .failure(NetworkingError())
+                request: request, state: .couldNotResolveResource
             ))
             return
         }
         
         let task = session.dataTask(with: urlRequest as NSURLRequest) {
-            (data, urlResponse, error) in
-            let httpResponse = urlResponse as? HTTPURLResponse
+            (data, response, error) in
             
-            let result: Result<Data>
-            switch (data, error) {
-            case (let data?, nil):
-                result = .success(data)
-            default:
-                // TODO: improve error handling
-                result = .failure(NetworkingError())
-            }
+            let state = self.responseStateFor(data: data, response: response, error: error)
             
-            let response = NetworkingResponse(
-                request: request,
-                httpResponse: httpResponse,
-                result: result
+            let response = NetworkResponse(
+                request: request, state: state
             )
             
             completion(response)
         }
         
         task.resume()
+    }
+    
+    func responseStateFor(
+        data: Data?, response: HTTPURLResponse?, error: Error?
+    ) -> NetworkResponse.State
+    {
+        switch (data, response, error) {
+            
+        case (let data?, let response?, nil):
+            return .respondedWithSuccess(.init(
+                httpResponse: response, data: data
+            ))
+            
+        case (let data?, let response?, let error?):
+            return .respondedWithError(.init(
+                response: .init(httpResponse: response, data: data),
+                error: error
+            ))
+            
+        case (nil, nil, let error?):
+            return .networkError(error)
+            
+        default:
+            assertionFailure("this case should not happen, in case it happens, you should add a new state in the NetworkResponse")
+            return .networkError(NSError())
+        }
     }
     
 }
@@ -166,8 +183,8 @@ extension URLSessionDispatcher {
     
     private func getURL(with path: String) -> URL? {
         guard let urlString = configuration.baseURL.appendingPathComponent(path).absoluteString.removingPercentEncoding,
-            let requestUrl = URL(string: urlString) else {
-                return nil
+              let requestUrl = URL(string: urlString) else {
+            return nil
         }
         return requestUrl
     }

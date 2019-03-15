@@ -8,22 +8,38 @@
 
 import Foundation
 
-struct NetworkingError: Error {
+struct NetworkError: Error {
     
 }
 
-struct NetworkingResponse {
+struct NetworkResponse {
     
     let request: ResourceRequest
-    let httpResponse: HTTPURLResponse?
     
-    let result: Result<Data>
+    let state: State
+    
+    enum State {
+        case couldNotResolveResource
+        case networkError(Error)
+        case respondedWithSuccess(HttpResponse)
+        case respondedWithError(ResponseWithError)
+    }
+    
+    struct HttpResponse {
+        let httpResponse: HTTPURLResponse
+        let data: Data
+    }
+    
+    struct ResponseWithError {
+        let response: HttpResponse
+        let error: Error
+    }
 }
 
 
 protocol NetworkDispatcher {
     
-    typealias Completion = (NetworkingResponse) -> Void
+    typealias Completion = (NetworkResponse) -> Void
     
     init(configuration: Configuration)
     

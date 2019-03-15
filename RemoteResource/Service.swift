@@ -39,85 +39,67 @@ enum Result<Success> {
     case failure(Error)
 }
 
-//ServiceManager -> NetworkingOperation(Resource) -> NetworkDispatcher
+//NetworkManager -> NetworkingOperation(Resource) -> NetworkDispatcher
 //
-//ServiceManager.execute(NetworkingOperation())
+//NetworkManager.execute(NetworkingOperation())
 
-protocol ServiceManager {
+protocol NetworkManager {
     
-    func execute()
-}
-
-protocol ResourceOperation {
+    var dispatcher: NetworkDispatcher { get }
     
-    associatedtype Resource: RemoteResource
+    init(dispatcher: NetworkDispatcher)
     
-    typealias Completion = (Result<Resource.Response>) -> Void
-    
-    func execute(
+    @discardableResult
+    func execute<Resource: RemoteResource>(
         request: Resource.Request,
-        in dispatcher: NetworkDispatcher,
-        completion: @escaping Completion
-    )
+        completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
+    ) -> Resource
 }
 
-struct NetworkingOperation<Resource: RemoteResource> {
+
+struct NetworkResponseTyped<Response: ResourceResponse> {
     
-    ///
-    public typealias Completion = (Result<Resource.Response>) -> Void
+    let networkResponse: NetworkResponse
+    let typedResponse: Result<Response>
+}
+
+extension NetworkManager {
     
-    /// The request to be executed
-    let request: Resource.Request
-    
-    /// Initialization
-    ///
-    /// - Parameter request: The request for this operation
-    public init(request: Resource.Request) {
-        self.request = request
-    }
-    
-    /// Execute an request operation
-    ///
-    /// - Parameters:
-    ///   - dispatcher: the dispatcher to perform requests
-    ///   - completion: the result of the operation
-    public func execute(in dispatcher: NetworkDispatcher, completion: @escaping Completion) {
-        
-        dispatcher.dispatch(request: request) { (response) in
-            
-            switch response.result {
-            case .success(let data):
-                // TODO: make response parsing
-                break
-            
-            case .failure(let error):
-                completion(.failure(error))
-            
+    @discardableResult
+    func execute<Resource: RemoteResource>(
+        request: Resource.Request,
+        completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
+    ) -> Resource?
+    {
+        dispatcher.dispatch(request: request) {
+            let typedResponse: Result<Resource.Response>
+            if case .respondedWithSuccess(let http) = $0.state {
+                typedResponse = ResourceParserDefault().parseResponse(http)
+            } else {
+                // TODO: maybe handle this error differently
+                typedResponse = .failure(NSError())
             }
-//            switch response {
-//            case .data(let data):
-//
-//                guard let data = data else {
-//                    completion(nil, NetworkingError(internalError: .noData))
-//                    return
-//                }
-//
-//                do {
-//                    let serializedResponse = try JSONDecoder().decode(ResponseType.self, from: data)
-//                    completion(serializedResponse, nil)
-//                } catch let error {
-//                    completion(nil, NetworkingError(rawError: error))
-//                }
-//
-//            case .error(let error): // TODO: Serialize error?
-//                let networkingError: NetworkingError = error ?? NetworkingError(internalError: .unknown)
-//                completion(nil, networkingError)
-//            }
+            
+            completion(.init(networkResponse: $0, typedResponse: typedResponse))
         }
         
+        return nil
     }
-    
 }
 
+protocol ResourceParser {
 
+    func parseResponse<Response: ResourceResponse>(
+        _ response: NetworkResponse.HttpResponse
+    ) -> Result<Response>
+}
 
+struct ResourceParserDefault: ResourceParser {
+
+    func parseResponse<Response: ResourceResponse>(
+        _ response: NetworkResponse.HttpResponse
+    ) -> Result<Response>
+    {
+        
+    }
+}

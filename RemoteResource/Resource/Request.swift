@@ -48,6 +48,7 @@ public enum HTTPMethod: String {
 /// Those are the parameters we want to pass with the request
 /// they can be used for the body or the URL
 ///
+/// - empty: no parameters
 /// - body: send with the request bory
 /// - url: send as url parameters, alongside the path
 public enum RequestParameters {
