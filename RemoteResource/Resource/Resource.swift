@@ -13,5 +13,7 @@ protocol RemoteResource {
     associatedtype Request: ResourceRequest
     associatedtype Response: ResourceResponse
     
+    var request: Request { get }
+    
     var sampleResponse: Response { get }
 }
