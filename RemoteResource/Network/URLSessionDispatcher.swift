@@ -59,9 +59,9 @@ public class URLSessionDispatcher: NetworkDispatcher {
     // MARK: - Dispatch
     
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
-        let path = pathFor(request: request)
-        let parameters = bodyParametersFor(request: request)
-        let headers = headersFor(request: request)
+        let path = pathFor(parameters: request.parameters, path: request.path)
+        let parameters = bodyParametersFor(parameters: request.parameters)
+        let headers = httpHeadersFor(optionalHeaders: request.headers)
         
         guard let urlRequest = self.buildURLRequest(
             httpMethod: request.method,
@@ -123,33 +123,34 @@ public class URLSessionDispatcher: NetworkDispatcher {
 extension URLSessionDispatcher {
     
     // MARK: - Helpers
-    private func headersFor(request: ResourceRequest) -> [String: String] {
-        
+    private func httpHeadersFor(
+        optionalHeaders: [String: String]?
+    ) -> [String: String]
+    {
         var headers = [String: String]()
         
         configuration.headers.forEach { (key, value) in
             headers[key] = value
         }
        
-        request.headers?.forEach { (key, value) in
+        optionalHeaders?.forEach { (key, value) in
             headers[key] = value
         }
         
         return headers
     }
     
-    private func pathFor(request: ResourceRequest) -> String {
-        switch request.parameters {
+    private func pathFor(parameters: RequestParameters, path: String) -> String {
+        switch parameters {
         case .url(let parameters):
             return URLHelper().escapedParameters(parameters)
             
         default:
-            return request.path
+            return path
         }
     }
-    
-    private func bodyParametersFor(request: ResourceRequest) -> Data? {
-        guard case .body(let parameters) = request.parameters else { return nil }
+    private func bodyParametersFor(parameters: RequestParameters) -> Data? {
+        guard case .body(let parameters) = parameters else { return nil }
         return try? JSONSerialization.data(withJSONObject: parameters, options: [])
     }
     
