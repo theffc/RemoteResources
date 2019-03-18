@@ -55,6 +55,15 @@
 			path = URLSession;
 			sourceTree = "<group>";
 		};
+		C81837AA223FF1520064D8CA /* aux */ = {
+			isa = PBXGroup;
+			children = (
+				C838DCA3223AEB4B0080F46C /* Info.plist */,
+				C838DCA2223AEB4B0080F46C /* RemoteResource.h */,
+			);
+			path = aux;
+			sourceTree = "<group>";
+		};
 		C838DC95223AEB4B0080F46C = {
 			isa = PBXGroup;
 			children = (
@@ -74,12 +83,11 @@
 		C838DCA1223AEB4B0080F46C /* RemoteResource */ = {
 			isa = PBXGroup;
 			children = (
-				C81837A5223FE51D0064D8CA /* URLSession */,
-				C838DCB1223AFA910080F46C /* Resource */,
+				C81837AA223FF1520064D8CA /* aux */,
 				C838DCAE223AFA370080F46C /* Network */,
-				C838DCA2223AEB4B0080F46C /* RemoteResource.h */,
-				C838DCA3223AEB4B0080F46C /* Info.plist */,
+				C838DCB1223AFA910080F46C /* Resource */,
 				C838DCAA223AEB620080F46C /* Service.swift */,
+				C81837A5223FE51D0064D8CA /* URLSession */,
 			);
 			path = RemoteResource;
 			sourceTree = "<group>";
@@ -330,7 +338,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RemoteResource/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/RemoteResource/aux/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -357,7 +365,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RemoteResource/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/RemoteResource/aux/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
