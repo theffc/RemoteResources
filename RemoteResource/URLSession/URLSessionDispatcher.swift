@@ -10,36 +10,30 @@ import Foundation
 
 public class URLSessionDispatcher: NetworkDispatcher {
     
+    struct Input {
+        let configuration: Configuration
+        let session: URLSessionProtocol
+        let urlRequestBuilder: URLRequestBuilder
+    }
+    
     // MARK: - Properties
     
-    public let configuration: Configuration
-    private var session: URLSessionProtocol = URLSession.shared
+    let input: Input
+    
+    var configuration: Configuration {
+        return input.configuration
+    }
     
     // MARK: - Initialization
     
-    public required init(configuration: Configuration) {
-        self.configuration = configuration
-    }
-    
-    public required init(configuration: Configuration, session: URLSessionProtocol = URLSession.shared) {
-        self.configuration = configuration
-        self.session = session
+    init(input: Input) {
+        self.input = input
     }
     
     // MARK: - Dispatch
     
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
-        let path = pathFor(parameters: request.parameters, path: request.path)
-        let parameters = bodyParametersFor(parameters: request.parameters)
-        let headers = httpHeadersFor(optionalHeaders: request.headers)
-        
-        guard let urlRequest = self.buildURLRequest(
-            httpMethod: request.method,
-            url: configuration.baseURL,
-            path: path,
-            payload: parameters,
-            headers: headers
-        ) else {
+        guard let urlRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
             completion(NetworkResponse(
                 // TODO: improve error handling
                 request: request, state: .couldNotResolveResource
@@ -47,7 +41,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
             return
         }
         
-        let task = session.dataTask(with: urlRequest) {
+        let task = input.session.dataTask(with: urlRequest) {
             (data, response, error) in
             
             let state = self.responseStateFor(data: data, response: response, error: error)
@@ -89,79 +83,6 @@ public class URLSessionDispatcher: NetworkDispatcher {
     }
     
 }
-
-extension URLSessionDispatcher {
-    
-    // MARK: - Helpers
-    private func httpHeadersFor(
-        optionalHeaders: [String: String]?
-    ) -> [String: String]
-    {
-        var headers = [String: String]()
-        
-        configuration.headers.forEach { (key, value) in
-            headers[key] = value
-        }
-       
-        optionalHeaders?.forEach { (key, value) in
-            headers[key] = value
-        }
-        
-        return headers
-    }
-    
-    private func pathFor(parameters: RequestParameters, path: String) -> String {
-        switch parameters {
-        case .url(let parameters):
-            return URLHelper().escapedParameters(parameters)
-            
-        default:
-            return path
-        }
-    }
-    private func bodyParametersFor(parameters: RequestParameters) -> Data? {
-        guard case .body(let parameters) = parameters else { return nil }
-        return try? JSONSerialization.data(withJSONObject: parameters, options: [])
-    }
-    
-    private func buildURLRequest(
-        httpMethod: HTTPMethod,
-        url: URL,
-        path: String?,
-        payload: Data? = nil,
-        headers: [String:String]? = nil
-    ) -> URLRequest?
-    {
-        var requestURL = url
-        if let path = path {
-            let fullURL = self.getURL(with: path)
-            
-            guard let uri = fullURL else {
-                return nil
-            }
-            
-            requestURL = uri
-        }
-        
-        var request = URLRequest(url: requestURL)
-        
-        request.httpMethod = httpMethod.rawValue
-        request.allHTTPHeaderFields = headers
-        request.httpBody = payload
-        
-        return request
-    }
-    
-    private func getURL(with path: String) -> URL? {
-        guard let urlString = configuration.baseURL.appendingPathComponent(path).absoluteString.removingPercentEncoding,
-              let requestUrl = URL(string: urlString) else {
-            return nil
-        }
-        return requestUrl
-    }
-    
-}
-
 
 class URLHelper {
     

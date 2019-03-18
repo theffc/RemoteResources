@@ -41,7 +41,7 @@ protocol NetworkDispatcher {
     
     typealias Completion = (NetworkResponse) -> Void
     
-    init(configuration: Configuration)
+    var configuration: Configuration { get }
     
     func dispatch(request: ResourceRequest, completion: @escaping Completion)
 }
