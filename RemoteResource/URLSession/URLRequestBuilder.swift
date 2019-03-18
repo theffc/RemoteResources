@@ -10,7 +10,7 @@ import Foundation
 
 protocol URLRequestBuilder {
 
-    var configuration: Configuration { get }
+    var configuration: NetworkConfiguration { get }
 
     func buildUrlFor(request: ResourceRequest) -> URLRequest?
 }
@@ -18,9 +18,9 @@ protocol URLRequestBuilder {
 
 struct URLRequestBuilderDefault: URLRequestBuilder {
 
-    let configuration: Configuration
+    let configuration: NetworkConfiguration
     
-    init(configuration: Configuration) {
+    init(configuration: NetworkConfiguration) {
         self.configuration = configuration
     }
 

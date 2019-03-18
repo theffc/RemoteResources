@@ -8,10 +8,6 @@
 
 import Foundation
 
-struct NetworkError: Error {
-    
-}
-
 struct NetworkResponse {
     
     let request: ResourceRequest
@@ -41,7 +37,7 @@ protocol NetworkDispatcher {
     
     typealias Completion = (NetworkResponse) -> Void
     
-    var configuration: Configuration { get }
+    var configuration: NetworkConfiguration { get }
     
     func dispatch(request: ResourceRequest, completion: @escaping Completion)
 }

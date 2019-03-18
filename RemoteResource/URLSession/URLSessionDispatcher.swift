@@ -11,7 +11,7 @@ import Foundation
 public class URLSessionDispatcher: NetworkDispatcher {
     
     struct Input {
-        let configuration: Configuration
+        let configuration: NetworkConfiguration
         let session: URLSessionProtocol
         let urlRequestBuilder: URLRequestBuilder
     }
@@ -20,7 +20,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
     
     let input: Input
     
-    var configuration: Configuration {
+    var configuration: NetworkConfiguration {
         return input.configuration
     }
     
