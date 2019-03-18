@@ -16,7 +16,7 @@
 		C838DCA4223AEB4B0080F46C /* RemoteResource.h in Headers */ = {isa = PBXBuildFile; fileRef = C838DCA2223AEB4B0080F46C /* RemoteResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C838DCAB223AEB620080F46C /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAA223AEB620080F46C /* Result.swift */; };
 		C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */; };
-		C838DCB0223AFA430080F46C /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAF223AFA430080F46C /* Network.swift */; };
+		C838DCB0223AFA430080F46C /* NetworkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAF223AFA430080F46C /* NetworkResponse.swift */; };
 		C838DCB3223AFAAF0080F46C /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCB2223AFAAF0080F46C /* Request.swift */; };
 		C838DCB5223AFAB70080F46C /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCB4223AFAB70080F46C /* Response.swift */; };
 		C838DCB7223AFADE0080F46C /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCB6223AFADE0080F46C /* Resource.swift */; };
@@ -35,7 +35,7 @@
 		C838DCA3223AEB4B0080F46C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C838DCAA223AEB620080F46C /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = URLSessionDispatcher.swift; sourceTree = "<group>"; };
-		C838DCAF223AFA430080F46C /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		C838DCAF223AFA430080F46C /* NetworkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkResponse.swift; sourceTree = "<group>"; };
 		C838DCB2223AFAAF0080F46C /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
 		C838DCB4223AFAB70080F46C /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		C838DCB6223AFADE0080F46C /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
@@ -113,10 +113,10 @@
 		C838DCAE223AFA370080F46C /* Network */ = {
 			isa = PBXGroup;
 			children = (
-				C81837AE223FF5130064D8CA /* NetworkManager.swift */,
-				C838DCAF223AFA430080F46C /* Network.swift */,
 				C81837B0223FF5700064D8CA /* NetworkConfiguration.swift */,
 				C81837B222404BA00064D8CA /* NetworkDispatcher.swift */,
+				C81837AE223FF5130064D8CA /* NetworkManager.swift */,
+				C838DCAF223AFA430080F46C /* NetworkResponse.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -219,7 +219,7 @@
 				C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */,
 				C838DCBB223C5A510080F46C /* ResponseValidation.swift in Sources */,
 				C838DCB7223AFADE0080F46C /* Resource.swift in Sources */,
-				C838DCB0223AFA430080F46C /* Network.swift in Sources */,
+				C838DCB0223AFA430080F46C /* NetworkResponse.swift in Sources */,
 				C838DCB5223AFAB70080F46C /* Response.swift in Sources */,
 				C81837B1223FF5700064D8CA /* NetworkConfiguration.swift in Sources */,
 				C81837B322404BA00064D8CA /* NetworkDispatcher.swift in Sources */,

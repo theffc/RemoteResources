@@ -11,7 +11,7 @@ import Foundation
 protocol ResponseParser {
 
     func parseResponse<Response: ResourceResponse>(
-        _ response: HttpResponse
+        _ response: NetworkResponse.Http
     ) -> Result<Response, ResponseParserError>
 }
 
@@ -20,7 +20,7 @@ struct ResponseParserError: Error { }
 struct ResponseParserDefault: ResponseParser {
 
     func parseResponse<Response: ResourceResponse>(
-        _ response: HttpResponse
+        _ response: NetworkResponse.Http
     ) -> Result<Response, ResponseParserError>
     {
         // TODO: implement function

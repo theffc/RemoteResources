@@ -40,12 +40,10 @@ class NetworkManagerDefault: NetworkManager {
         resource: Resource,
         completion: @escaping (NetworkResponseForResource<Resource>) -> Void
     ) {
-        typealias ReturnType = NetworkResponseForResource<Resource>
-    
         input.dispatcher.dispatch(request: resource.request) {
-            let result: Result<ReturnType.Response, ReturnType.Error>
+            let result: NetworkResponseForResource<Resource>.ResultType
             
-            switch $0.response {
+            switch $0.result {
             case .success(let http):
                 let parserResult: Result<Resource.Response, ResponseParserError> =
                     self.input.responseParser.parseResponse(http)
@@ -54,14 +52,14 @@ class NetworkManagerDefault: NetworkManager {
                 case .success(let parsed):
                     result = .success(.init(typed: parsed, http: http))
                 case .failure(let error):
-                    result = .failure(.parser(error))
+                    result = .failure(.parser(.init(error: error, http: http)))
                 }
             
             case .failure(let error):
                 result = .failure(.network(error))
             }
             
-            completion(.init(request: resource.request, response: result))
+            completion(.init(request: resource.request, result: result))
         }
     }
 }

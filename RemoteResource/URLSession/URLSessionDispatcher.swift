@@ -35,7 +35,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
         guard let urlRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
             completion(NetworkResponse(
-                request: request, response: .failure(.couldNotResolveResource)
+                request: request, result: .failure(.couldNotResolveResource)
             ))
             return
         }
@@ -43,10 +43,10 @@ public class URLSessionDispatcher: NetworkDispatcher {
         let task = input.session.dataTask(with: urlRequest) {
             (data, response, error) in
             
-            let state = self.responseStateFor(data: data, response: response, error: error)
+            let state = self.responseResultFor(data: data, response: response, error: error)
             
             let response = NetworkResponse(
-                request: request, response: state
+                request: request, result: state
             )
             
             completion(response)
@@ -55,14 +55,14 @@ public class URLSessionDispatcher: NetworkDispatcher {
         task.resume()
     }
     
-    func responseStateFor(
+    func responseResultFor(
         data: Data?, response: HTTPURLResponse?, error: Error?
-    ) -> NetworkResponse.ResponseValue
+    ) -> NetworkResponse.ResultType
     {
         switch (data, response, error) {
             
         case (let data?, let response?, let error):
-            let httpResponse = HttpResponse(httpResponse: response, data: data)
+            let httpResponse = NetworkResponse.Http(httpResponse: response, data: data)
             
             if let error = error {
                 return .failure(.serverError(.init(
@@ -86,20 +86,18 @@ public class URLSessionDispatcher: NetworkDispatcher {
 class URLHelper {
     
     func escapedParameters(_ parameters: [String: Any]) -> String {
-        if parameters.isEmpty {
-            return ""
-        } else {
-            var keyValuePairs = [String]()
-            for (key, value) in parameters {
-                // make sure that it is a string value
-                let stringValue = "\(value)"
-                // escape it
-                let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-                // append it
-                keyValuePairs.append(key + "=" + "\(escapedValue!)")
-            }
-            return "?\(keyValuePairs.joined(separator: "&"))"
+        guard !parameters.isEmpty else { return "" }
+        
+        var keyValuePairs = [String]()
+        for (key, value) in parameters {
+            // make sure that it is a string value
+            let stringValue = "\(value)"
+            // escape it
+            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+            // append it
+            keyValuePairs.append(key + "=" + "\(escapedValue!)")
         }
+        return "?\(keyValuePairs.joined(separator: "&"))"
     }
     
 }
