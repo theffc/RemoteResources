@@ -62,22 +62,16 @@ public class URLSessionDispatcher: NetworkDispatcher {
     {
         switch (data, response, error) {
             
-        case (let data?, let response?, nil):
-            return .respondedWithSuccess(.init(
-                httpResponse: response, data: data
-            ))
-            
-        case (let data?, let response?, let error?):
-            return .respondedWithError(.init(
-                response: .init(httpResponse: response, data: data),
-                error: error
+        case (let data?, let response?, let error):
+            return .didReceiveResponse(.init(
+                httpResponse: response, data: data, error: error
             ))
             
         case (nil, nil, let error?):
             return .networkError(error)
             
         default:
-            assertionFailure("this case should not happen. In case it happens, you should add a new state in the NetworkResponse")
+            assertionFailure("this case should never happen. In case it happens, you should add a new state in the NetworkResponse")
             return .networkError(NSError())
         }
     }

@@ -17,18 +17,13 @@ struct NetworkResponse {
     enum State {
         case couldNotResolveResource
         case networkError(Error)
-        case respondedWithSuccess(HttpResponse)
-        case respondedWithError(ResponseWithError)
+        case didReceiveResponse(HttpResponse)
     }
     
     struct HttpResponse {
         let httpResponse: HTTPURLResponse
         let data: Data
-    }
-    
-    struct ResponseWithError {
-        let response: HttpResponse
-        let error: Error
+        let error: Error?
     }
 }
 

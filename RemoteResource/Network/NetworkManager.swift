@@ -19,6 +19,7 @@ protocol NetworkManager {
 }
 
 
+// TODO: refactor this struct to be an enum with improved semantics
 struct NetworkResponseTyped<Response: ResourceResponse> {
     
     let networkResponse: NetworkResponse
@@ -39,10 +40,16 @@ class NetworkManagerDefault: NetworkManager {
     ) {
         dispatcher.dispatch(request: resource.request) {
             let typedResponse: Result<Resource.Response>
-            if case .respondedWithSuccess(let http) = $0.state {
-                typedResponse = ResponseParserDefault().parseResponse(http)
+            
+            // TODO: should handle error properly
+            
+            if case .didReceiveResponse(let response) = $0.state {
+                if let error = response.error {
+                    typedResponse = .failure(error)
+                } else {
+                    typedResponse = ResponseParserDefault().parseResponse(response)
+                }
             } else {
-                // TODO: maybe handle this error differently
                 typedResponse = .failure(NSError())
             }
             
