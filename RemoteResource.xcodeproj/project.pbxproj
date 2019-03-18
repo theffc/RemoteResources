@@ -41,6 +41,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C81837A5223FE51D0064D8CA /* URLSession */ = {
+			isa = PBXGroup;
+			children = (
+				C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */,
+			);
+			path = URLSession;
+			sourceTree = "<group>";
+		};
 		C838DC95223AEB4B0080F46C = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +68,7 @@
 		C838DCA1223AEB4B0080F46C /* RemoteResource */ = {
 			isa = PBXGroup;
 			children = (
+				C81837A5223FE51D0064D8CA /* URLSession */,
 				C838DCB1223AFA910080F46C /* Resource */,
 				C838DCAE223AFA370080F46C /* Network */,
 				C838DCA2223AEB4B0080F46C /* RemoteResource.h */,
@@ -73,7 +82,6 @@
 			isa = PBXGroup;
 			children = (
 				C838DCAF223AFA430080F46C /* Network.swift */,
-				C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";

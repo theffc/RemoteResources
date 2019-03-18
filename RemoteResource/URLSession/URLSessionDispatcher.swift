@@ -11,7 +11,7 @@ import Foundation
 public protocol URLSessionProtocol {
 
     func dataTask(
-        with request: NSURLRequest,
+        with request: URLRequest,
         completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
     ) -> URLSessionDataTaskProtocol
 }
@@ -26,16 +26,30 @@ extension URLSessionDataTask: URLSessionDataTaskProtocol {}
 
 // MARK: - URLSessionProtocol
 extension URLSession: URLSessionProtocol {
-
+    
     public func dataTask(
-        with request: NSURLRequest,
+        with request: URLRequest,
         completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
     ) -> URLSessionDataTaskProtocol
     {
-        let urlRequest = request
-        let task = dataTask(with: urlRequest, completionHandler: completionHandler)
+        let task = dataTask(with: request) { (data, response, error) in
+            let http = response as? HTTPURLResponse
+            
+            let haveResponseButIsNotHttp = (http == nil) && (response != nil)
+            if haveResponseButIsNotHttp {
+                completionHandler(data, nil, ErrorResponseNotHttp(otherError: error))
+            } else {
+                completionHandler(data, http, error)
+            }
+        }
+        
         return task as URLSessionDataTaskProtocol
     }
+    
+    struct ErrorResponseNotHttp: Error {
+        let otherError: Error?
+    }
+    
 }
 
 public class URLSessionDispatcher: NetworkDispatcher {
@@ -77,7 +91,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
             return
         }
         
-        let task = session.dataTask(with: urlRequest as NSURLRequest) {
+        let task = session.dataTask(with: urlRequest) {
             (data, response, error) in
             
             let state = self.responseStateFor(data: data, response: response, error: error)
@@ -113,7 +127,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
             return .networkError(error)
             
         default:
-            assertionFailure("this case should not happen, in case it happens, you should add a new state in the NetworkResponse")
+            assertionFailure("this case should not happen. In case it happens, you should add a new state in the NetworkResponse")
             return .networkError(NSError())
         }
     }
