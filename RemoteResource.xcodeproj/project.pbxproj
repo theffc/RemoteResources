@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		C81837A7223FEA660064D8CA /* URLSessionProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837A6223FEA660064D8CA /* URLSessionProtocols.swift */; };
 		C81837A9223FEB110064D8CA /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837A8223FEB110064D8CA /* URLRequestBuilder.swift */; };
+		C81837AC223FF27C0064D8CA /* ResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837AB223FF27C0064D8CA /* ResponseParser.swift */; };
 		C838DCA4223AEB4B0080F46C /* RemoteResource.h in Headers */ = {isa = PBXBuildFile; fileRef = C838DCA2223AEB4B0080F46C /* RemoteResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C838DCAB223AEB620080F46C /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAA223AEB620080F46C /* Service.swift */; };
 		C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		C81837A6223FEA660064D8CA /* URLSessionProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionProtocols.swift; sourceTree = "<group>"; };
 		C81837A8223FEB110064D8CA /* URLRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestBuilder.swift; sourceTree = "<group>"; };
+		C81837AB223FF27C0064D8CA /* ResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseParser.swift; sourceTree = "<group>"; };
 		C838DC9F223AEB4B0080F46C /* RemoteResource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RemoteResource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C838DCA2223AEB4B0080F46C /* RemoteResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteResource.h; sourceTree = "<group>"; };
 		C838DCA3223AEB4B0080F46C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				C838DCB6223AFADE0080F46C /* Resource.swift */,
 				C838DCB4223AFAB70080F46C /* Response.swift */,
 				C838DCBA223C5A510080F46C /* ResponseValidation.swift */,
+				C81837AB223FF27C0064D8CA /* ResponseParser.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -192,6 +195,7 @@
 			files = (
 				C81837A7223FEA660064D8CA /* URLSessionProtocols.swift in Sources */,
 				C838DCAB223AEB620080F46C /* Service.swift in Sources */,
+				C81837AC223FF27C0064D8CA /* ResponseParser.swift in Sources */,
 				C81837A9223FEB110064D8CA /* URLRequestBuilder.swift in Sources */,
 				C838DCB3223AFAAF0080F46C /* Request.swift in Sources */,
 				C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */,

@@ -71,7 +71,7 @@ class NetworkManagerDefault: NetworkManager {
         dispatcher.dispatch(request: resource.request) {
             let typedResponse: Result<Resource.Response>
             if case .respondedWithSuccess(let http) = $0.state {
-                typedResponse = ResourceParserDefault().parseResponse(http)
+                typedResponse = ResponseParserDefault().parseResponse(http)
             } else {
                 // TODO: maybe handle this error differently
                 typedResponse = .failure(NSError())
@@ -79,23 +79,5 @@ class NetworkManagerDefault: NetworkManager {
             
             completion(.init(networkResponse: $0, typedResponse: typedResponse))
         }
-    }
-}
-
-protocol ResourceParser {
-
-    func parseResponse<Response: ResourceResponse>(
-        _ response: NetworkResponse.HttpResponse
-    ) -> Result<Response>
-}
-
-struct ResourceParserDefault: ResourceParser {
-
-    func parseResponse<Response: ResourceResponse>(
-        _ response: NetworkResponse.HttpResponse
-    ) -> Result<Response>
-    {
-        // TODO: implement function
-        return .failure(NSError())
     }
 }
