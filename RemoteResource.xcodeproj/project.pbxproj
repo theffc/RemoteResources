@@ -66,6 +66,16 @@
 			path = aux;
 			sourceTree = "<group>";
 		};
+		C81837AD223FF31D0064D8CA /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				C81837AB223FF27C0064D8CA /* ResponseParser.swift */,
+				C838DCBA223C5A510080F46C /* ResponseValidation.swift */,
+				C838DCB4223AFAB70080F46C /* Response.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
 		C838DC95223AEB4B0080F46C = {
 			isa = PBXGroup;
 			children = (
@@ -107,9 +117,7 @@
 			children = (
 				C838DCB2223AFAAF0080F46C /* Request.swift */,
 				C838DCB6223AFADE0080F46C /* Resource.swift */,
-				C838DCB4223AFAB70080F46C /* Response.swift */,
-				C838DCBA223C5A510080F46C /* ResponseValidation.swift */,
-				C81837AB223FF27C0064D8CA /* ResponseParser.swift */,
+				C81837AD223FF31D0064D8CA /* Response */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
