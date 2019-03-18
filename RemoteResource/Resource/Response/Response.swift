@@ -10,5 +10,4 @@ import Foundation
 
 protocol ResourceResponse: Decodable {
 
-    var validation: ValidationType { get }
 }

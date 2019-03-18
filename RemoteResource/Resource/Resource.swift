@@ -16,4 +16,6 @@ protocol RemoteResource {
     var request: Request { get }
     
     var sampleResponse: Response { get }
+    
+    var validation: ValidationType { get }
 }

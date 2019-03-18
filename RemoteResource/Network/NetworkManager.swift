@@ -46,7 +46,7 @@ class NetworkManagerDefault: NetworkManager {
             switch $0.result {
             case .success(let http):
                 let parserResult: Result<Resource.Response, ResponseParserError> =
-                    self.input.responseParser.parseResponse(http)
+                    self.input.responseParser.parseResponse(http, for: resource)
                 
                 switch parserResult {
                 case .success(let parsed):

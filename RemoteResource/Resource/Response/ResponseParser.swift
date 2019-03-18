@@ -10,20 +10,34 @@ import Foundation
 
 protocol ResponseParser {
 
-    func parseResponse<Response: ResourceResponse>(
-        _ response: NetworkResponse.Http
-    ) -> Result<Response, ResponseParserError>
+    func parseResponse<Resource: RemoteResource>(
+        _ response: NetworkResponse.Http,
+        for resource: Resource
+    ) -> Result<Resource.Response, ResponseParserError>
 }
 
-struct ResponseParserError: Error { }
+enum ResponseParserError: Error {
+    case notValidStatusCode(Int)
+    case couldNotParse(Error)
+}
 
 struct ResponseParserDefault: ResponseParser {
 
-    func parseResponse<Response: ResourceResponse>(
-        _ response: NetworkResponse.Http
-    ) -> Result<Response, ResponseParserError>
+    func parseResponse<Resource: RemoteResource>(
+        _ response: NetworkResponse.Http,
+        for resource: Resource
+    ) -> Result<Resource.Response, ResponseParserError>
     {
-        // TODO: implement function
-        return .failure(ResponseParserError())
+        let statusCode = response.httpResponse.statusCode
+        guard resource.validation.isValidStatusCode(statusCode) else {
+            return .failure(.notValidStatusCode(statusCode))
+        }
+        
+        do {
+            let parsed = try JSONDecoder().decode(Resource.Response.self, from: response.data)
+            return .success(parsed)
+        } catch {
+            return .failure(.couldNotParse(error))
+        }
     }
 }

@@ -76,9 +76,9 @@
 		C81837AD223FF31D0064D8CA /* Response */ = {
 			isa = PBXGroup;
 			children = (
+				C838DCB4223AFAB70080F46C /* Response.swift */,
 				C81837AB223FF27C0064D8CA /* ResponseParser.swift */,
 				C838DCBA223C5A510080F46C /* ResponseValidation.swift */,
-				C838DCB4223AFAB70080F46C /* Response.swift */,
 			);
 			path = Response;
 			sourceTree = "<group>";
