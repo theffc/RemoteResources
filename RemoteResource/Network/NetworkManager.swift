@@ -45,21 +45,28 @@ class NetworkManagerDefault: NetworkManager {
             
             switch $0.result {
             case .success(let http):
-                let parserResult: Result<Resource.Response, ResponseParserError> =
-                    self.input.responseParser.parseResponse(http, for: resource)
-                
-                switch parserResult {
-                case .success(let parsed):
-                    result = .success(.init(typed: parsed, http: http))
-                case .failure(let error):
-                    result = .failure(.parser(.init(error: error, http: http)))
-                }
+                result = self.parseResponse(http, for: resource)
             
             case .failure(let error):
                 result = .failure(.network(error))
             }
             
             completion(.init(request: resource.request, result: result))
+        }
+    }
+    
+    private func parseResponse<Resource: RemoteResource>(
+        _ httpResponse: NetworkResponse.Http,
+        for resource: Resource
+    ) -> NetworkResponseForResource<Resource>.ResultType
+    {
+        let parserResult = input.responseParser.parseResponse(httpResponse, for: resource)
+        
+        switch parserResult {
+        case .success(let parsed):
+            return .success(.init(typed: parsed, http: httpResponse))
+        case .failure(let error):
+            return .failure(.parser(.init(error: error, http: httpResponse)))
         }
     }
 }

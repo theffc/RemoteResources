@@ -21,7 +21,7 @@ struct NetworkResponse {
     }
     
     enum Error {
-        case couldNotResolveResource
+        case couldNotResolveResourceIntoUrlRequest
         case networkError(Swift.Error)
         case serverError(ServerError)
         

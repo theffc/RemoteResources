@@ -21,10 +21,10 @@ public protocol URLSessionDataTaskProtocol {
     func cancel()
 }
 
-// MARK: URLSessionDataTaskProtocol
+// MARK: - Extensions
+
 extension URLSessionDataTask: URLSessionDataTaskProtocol {}
 
-// MARK: - URLSessionProtocol
 extension URLSession: URLSessionProtocol {
     
     public func dataTask(
@@ -37,7 +37,8 @@ extension URLSession: URLSessionProtocol {
             
             let haveResponseButIsNotHttp = (http == nil) && (response != nil)
             if haveResponseButIsNotHttp {
-                completionHandler(data, nil, ErrorResponseNotHttp(otherError: error))
+                assertionFailure("since this library is dedicated to HTTP, this should never happen")
+                completionHandler(nil, nil, ErrorResponseNotHttp(otherError: error))
             } else {
                 completionHandler(data, http, error)
             }
@@ -49,5 +50,4 @@ extension URLSession: URLSessionProtocol {
     struct ErrorResponseNotHttp: Error {
         let otherError: Error?
     }
-    
 }

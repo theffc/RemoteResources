@@ -35,7 +35,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
         guard let urlRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
             completion(NetworkResponse(
-                request: request, result: .failure(.couldNotResolveResource)
+                request: request, result: .failure(.couldNotResolveResourceIntoUrlRequest)
             ))
             return
         }
