@@ -12,27 +12,39 @@ struct NetworkResponse {
     
     let request: ResourceRequest
     
-    let state: State
+    typealias ResponseValue = Result<HttpResponse, NetworkResponseError>
+    let response: ResponseValue
+}
+
+struct HttpResponse {
+    let httpResponse: HTTPURLResponse
+    let data: Data
+}
+
+enum NetworkResponseError: Error {
+    case couldNotResolveResource
+    case networkError(Error)
+    case serverError(ServerError)
     
-    enum State {
-        case couldNotResolveResource
-        case networkError(Error)
-        case didReceiveResponse(HttpResponse)
-    }
-    
-    struct HttpResponse {
-        let httpResponse: HTTPURLResponse
-        let data: Data
-        let error: Error?
+    struct ServerError: Error {
+        let error: Error
+        let httpResponse: HttpResponse
     }
 }
 
+struct NetworkResponseForResource<Resource: RemoteResource> {
 
-protocol NetworkDispatcher {
+    let request: Resource.Request
     
-    typealias Completion = (NetworkResponse) -> Void
+    let response: Result<Response, Error>
     
-    var configuration: NetworkConfiguration { get }
+    struct Response {
+        let typed: Resource.Response
+        let http: HttpResponse
+    }
     
-    func dispatch(request: ResourceRequest, completion: @escaping Completion)
+    enum Error {
+        case network(NetworkResponseError)
+        case parser(ResponseParserError)
+    }
 }

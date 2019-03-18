@@ -12,48 +12,56 @@ protocol NetworkManager {
     
     var dispatcher: NetworkDispatcher { get }
     
+    var responseParser: ResponseParser { get }
+    
     func request<Resource: RemoteResource>(
         resource: Resource,
-        completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
+        completion: @escaping (NetworkResponseForResource<Resource>) -> Void
     )
-}
-
-
-// TODO: refactor this struct to be an enum with improved semantics
-struct NetworkResponseTyped<Response: ResourceResponse> {
-    
-    let networkResponse: NetworkResponse
-    let typedResponse: Result<Response>
 }
 
 class NetworkManagerDefault: NetworkManager {
     
-    let dispatcher: NetworkDispatcher
+    let input: Input
     
-    init(dispatcher: NetworkDispatcher) {
-        self.dispatcher = dispatcher
+    struct Input {
+        let dispatcher: NetworkDispatcher
+        let responseParser: ResponseParser
     }
+    
+    init(input: Input) {
+        self.input = input
+    }
+    
+    var dispatcher: NetworkDispatcher { return input.dispatcher }
+    var responseParser: ResponseParser { return input.responseParser }
     
     func request<Resource: RemoteResource>(
         resource: Resource,
-        completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
+        completion: @escaping (NetworkResponseForResource<Resource>) -> Void
     ) {
-        dispatcher.dispatch(request: resource.request) {
-            let typedResponse: Result<Resource.Response>
+        typealias ReturnType = NetworkResponseForResource<Resource>
+    
+        input.dispatcher.dispatch(request: resource.request) {
+            let result: Result<ReturnType.Response, ReturnType.Error>
             
-            // TODO: should handle error properly
-            
-            if case .didReceiveResponse(let response) = $0.state {
-                if let error = response.error {
-                    typedResponse = .failure(error)
-                } else {
-                    typedResponse = ResponseParserDefault().parseResponse(response)
+            switch $0.response {
+            case .success(let http):
+                let parserResult: Result<Resource.Response, ResponseParserError> =
+                    self.input.responseParser.parseResponse(http)
+                
+                switch parserResult {
+                case .success(let parsed):
+                    result = .success(.init(typed: parsed, http: http))
+                case .failure(let error):
+                    result = .failure(.parser(error))
                 }
-            } else {
-                typedResponse = .failure(NSError())
+            
+            case .failure(let error):
+                result = .failure(.network(error))
             }
             
-            completion(.init(networkResponse: $0, typedResponse: typedResponse))
+            completion(.init(request: resource.request, response: result))
         }
     }
 }

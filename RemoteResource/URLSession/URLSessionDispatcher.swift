@@ -35,8 +35,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
         guard let urlRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
             completion(NetworkResponse(
-                // TODO: improve error handling
-                request: request, state: .couldNotResolveResource
+                request: request, response: .failure(.couldNotResolveResource)
             ))
             return
         }
@@ -47,7 +46,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
             let state = self.responseStateFor(data: data, response: response, error: error)
             
             let response = NetworkResponse(
-                request: request, state: state
+                request: request, response: state
             )
             
             completion(response)
@@ -58,21 +57,27 @@ public class URLSessionDispatcher: NetworkDispatcher {
     
     func responseStateFor(
         data: Data?, response: HTTPURLResponse?, error: Error?
-    ) -> NetworkResponse.State
+    ) -> NetworkResponse.ResponseValue
     {
         switch (data, response, error) {
             
         case (let data?, let response?, let error):
-            return .didReceiveResponse(.init(
-                httpResponse: response, data: data, error: error
-            ))
+            let httpResponse = HttpResponse(httpResponse: response, data: data)
+            
+            if let error = error {
+                return .failure(.serverError(.init(
+                    error: error, httpResponse: httpResponse
+                )))
+            } else {
+                return .success(httpResponse)
+            }
             
         case (nil, nil, let error?):
-            return .networkError(error)
+            return .failure(.networkError(error))
             
         default:
             assertionFailure("this case should never happen. In case it happens, you should add a new state in the NetworkResponse")
-            return .networkError(NSError())
+            return .failure(.networkError(NSError()))
         }
     }
     

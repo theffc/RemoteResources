@@ -12,6 +12,7 @@
 		C81837AC223FF27C0064D8CA /* ResponseParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837AB223FF27C0064D8CA /* ResponseParser.swift */; };
 		C81837AF223FF5130064D8CA /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837AE223FF5130064D8CA /* NetworkManager.swift */; };
 		C81837B1223FF5700064D8CA /* NetworkConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837B0223FF5700064D8CA /* NetworkConfiguration.swift */; };
+		C81837B322404BA00064D8CA /* NetworkDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C81837B222404BA00064D8CA /* NetworkDispatcher.swift */; };
 		C838DCA4223AEB4B0080F46C /* RemoteResource.h in Headers */ = {isa = PBXBuildFile; fileRef = C838DCA2223AEB4B0080F46C /* RemoteResource.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C838DCAB223AEB620080F46C /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAA223AEB620080F46C /* Result.swift */; };
 		C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCAC223AF12A0080F46C /* URLSessionDispatcher.swift */; };
@@ -28,6 +29,7 @@
 		C81837AB223FF27C0064D8CA /* ResponseParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseParser.swift; sourceTree = "<group>"; };
 		C81837AE223FF5130064D8CA /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		C81837B0223FF5700064D8CA /* NetworkConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConfiguration.swift; sourceTree = "<group>"; };
+		C81837B222404BA00064D8CA /* NetworkDispatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDispatcher.swift; sourceTree = "<group>"; };
 		C838DC9F223AEB4B0080F46C /* RemoteResource.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RemoteResource.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C838DCA2223AEB4B0080F46C /* RemoteResource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RemoteResource.h; sourceTree = "<group>"; };
 		C838DCA3223AEB4B0080F46C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				C81837AE223FF5130064D8CA /* NetworkManager.swift */,
 				C838DCAF223AFA430080F46C /* Network.swift */,
 				C81837B0223FF5700064D8CA /* NetworkConfiguration.swift */,
+				C81837B222404BA00064D8CA /* NetworkDispatcher.swift */,
 			);
 			path = Network;
 			sourceTree = "<group>";
@@ -219,6 +222,7 @@
 				C838DCB0223AFA430080F46C /* Network.swift in Sources */,
 				C838DCB5223AFAB70080F46C /* Response.swift in Sources */,
 				C81837B1223FF5700064D8CA /* NetworkConfiguration.swift in Sources */,
+				C81837B322404BA00064D8CA /* NetworkDispatcher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
