@@ -39,21 +39,14 @@ enum Result<Success> {
     case failure(Error)
 }
 
-//NetworkManager -> NetworkingOperation(Resource) -> NetworkDispatcher
-//
-//NetworkManager.execute(NetworkingOperation())
-
 protocol NetworkManager {
     
     var dispatcher: NetworkDispatcher { get }
     
-    init(dispatcher: NetworkDispatcher)
-    
-    @discardableResult
-    func execute<Resource: RemoteResource>(
-        request: Resource.Request,
+    func request<Resource: RemoteResource>(
+        resource: Resource,
         completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
-    ) -> Resource
+    )
 }
 
 
@@ -63,15 +56,19 @@ struct NetworkResponseTyped<Response: ResourceResponse> {
     let typedResponse: Result<Response>
 }
 
-extension NetworkManager {
+class NetworkManagerDefault: NetworkManager {
     
-    @discardableResult
-    func execute<Resource: RemoteResource>(
-        request: Resource.Request,
+    let dispatcher: NetworkDispatcher
+    
+    init(dispatcher: NetworkDispatcher) {
+        self.dispatcher = dispatcher
+    }
+    
+    func request<Resource: RemoteResource>(
+        resource: Resource,
         completion: @escaping (NetworkResponseTyped<Resource.Response>) -> Void
-    ) -> Resource?
-    {
-        dispatcher.dispatch(request: request) {
+    ) {
+        dispatcher.dispatch(request: resource.request) {
             let typedResponse: Result<Resource.Response>
             if case .respondedWithSuccess(let http) = $0.state {
                 typedResponse = ResourceParserDefault().parseResponse(http)
@@ -82,8 +79,6 @@ extension NetworkManager {
             
             completion(.init(networkResponse: $0, typedResponse: typedResponse))
         }
-        
-        return nil
     }
 }
 
@@ -100,6 +95,7 @@ struct ResourceParserDefault: ResourceParser {
         _ response: NetworkResponse.HttpResponse
     ) -> Result<Response>
     {
-        
+        // TODO: implement function
+        return .failure(NSError())
     }
 }
