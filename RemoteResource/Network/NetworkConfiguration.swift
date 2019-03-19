@@ -8,8 +8,6 @@
 
 import Foundation
 
-/// Defines the environment configuration to be extracted
-/// from our configution files (normally Plists)
 public struct NetworkConfiguration {
     
     /// Defines the environment name, ie. Production, Staging, Dev and so on
@@ -18,18 +16,12 @@ public struct NetworkConfiguration {
     /// Here we can put the default headers that we need for all requests
     let headers: [String: String]
     
-    /// The base URL for the dispatcher
+    /// The base URL for the environment
     let baseURL: URL
     
-    /// Initialzer, that sets the initial values and starts the MASFoundation instance with the givend configurations
-    ///
-    /// - Parameters:
-    ///   - name: the enviroment
-    ///   - headers: the default headers for the environment
-    public init(name: String, headers: [String: String]? = nil, baseURL: URL) {
+    public init(name: String, headers: [String: String] = [:], baseURL: URL) {
         self.name = name
-        self.headers = headers ?? [:]
+        self.headers = headers
         self.baseURL = baseURL
     }
-    
 }
