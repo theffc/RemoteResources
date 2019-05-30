@@ -46,19 +46,17 @@ public extension NetworkDispatcherType {
         let task = configuration.session.dataTask(with: urlRequest) {
             (data, response, error) in
             
-            let state = self.responseResultFor(data: data, response: response, error: error)
+            let result = self.resultFor(data: data, response: response, error: error)
             
-            let response = NetworkResponse(
-                request: request, result: state
-            )
-            
-            completion(response)
+            completion(NetworkResponse(
+                request: request, result: result
+            ))
         }
         
         task.resume()
     }
     
-    func responseResultFor(
+    func resultFor(
         data: Data?, response: HTTPURLResponse?, error: Error?
     ) -> NetworkResponse.ResultType
     {

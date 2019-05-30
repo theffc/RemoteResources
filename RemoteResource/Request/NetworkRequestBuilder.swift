@@ -39,7 +39,7 @@ public extension NetworkRequestBuilderType {
         
         var urlRequest = URLRequest(url: url)
         
-        urlRequest.httpMethod = request.method.rawValue
+        urlRequest.httpMethod = request.httpMethod.rawValue
         urlRequest.allHTTPHeaderFields = headers
         urlRequest.httpBody = parameters
         
