@@ -12,7 +12,7 @@ struct NetworkFactory {
     
     let configuration: NetworkConfiguration
     
-    func makeManager() -> NetworkManager {
+    func makeManager() -> ResourceManager {
         let builder = configuration.builder ?? NetworkRequestBuilder(configuration: .init(
             baseUrl: configuration.baseURL,
             headers: configuration.headers
@@ -23,7 +23,7 @@ struct NetworkFactory {
             session: configuration.session
         ))
         
-        return NetworkManager(configuration: .init(
+        return ResourceManager(configuration: .init(
             dispatcher: dispatcher,
             responseParser: configuration.responseParser
         ))

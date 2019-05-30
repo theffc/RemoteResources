@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// It's the api of your Resource; describes input and output.
 public protocol RemoteResource {
 
     associatedtype Request: ResourceRequest

@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  ResourceManager.swift
 //  RemoteResource
 //
 //  Created by Frederico Franco on 18/03/19.
@@ -8,9 +8,13 @@
 
 import Foundation
 
-public protocol NetworkManagerType {
+// TODO: configure it to make it possible to return just the sample response from the Resource.
 
-    var configuration: NetworkManagerConfiguration { get }
+/// Manages the request and response for a particular Resource.
+/// You should be using it as the primary api of your services.
+public protocol ResourceManagerType {
+
+    var configuration: ResourceManagerConfiguration { get }
     
     func request<Resource: RemoteResource>(
         resource: Resource,
@@ -18,22 +22,22 @@ public protocol NetworkManagerType {
     )
 }
 
-public struct NetworkManagerConfiguration {
+public struct ResourceManagerConfiguration {
     
     let dispatcher: NetworkDispatcherType
     let responseParser: ResponseParserType
 }
 
-public class NetworkManager: NetworkManagerType {
+public class ResourceManager: ResourceManagerType {
     
-    public let configuration: NetworkManagerConfiguration
+    public let configuration: ResourceManagerConfiguration
     
-    init(configuration: NetworkManagerConfiguration) {
+    init(configuration: ResourceManagerConfiguration) {
         self.configuration = configuration
     }
 }
 
-public extension NetworkManagerType {
+public extension ResourceManagerType {
     
     func request<Resource: RemoteResource>(
         resource: Resource,
@@ -54,7 +58,7 @@ public extension NetworkManagerType {
         }
     }
     
-    private func parseResponse<Resource: RemoteResource>(
+    func parseResponse<Resource: RemoteResource>(
         _ httpResponse: NetworkResponse.Http,
         for resource: Resource
     ) -> NetworkResponseForResource<Resource>.ResultType

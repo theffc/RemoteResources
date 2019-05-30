@@ -35,22 +35,22 @@ public struct NetworkResponse {
 
 public struct NetworkResponseForResource<Resource: RemoteResource> {
 
-    let request: Resource.Request
+    public let request: Resource.Request
     
-    let result: ResultType
-    typealias ResultType = Result<Response, Error>
+    public let result: ResultType
+    public typealias ResultType = Result<Response, Error>
     
-    struct Response {
+    public struct Response {
         let typed: Resource.Response
         let http: NetworkResponse.Http
     }
     
-    enum Error: Swift.Error {
+    public enum Error: Swift.Error {
         case network(NetworkResponse.Error)
         case parser(ParserError)
     }
     
-    struct ParserError {
+    public struct ParserError {
         let error: ResponseParserError
         let http: NetworkResponse.Http
     }
