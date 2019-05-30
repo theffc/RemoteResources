@@ -82,23 +82,3 @@ public class URLSessionDispatcher: NetworkDispatcher {
     }
     
 }
-
-class URLHelper {
-    
-    func stringWithSafelyEncodedParameters(_ parameters: [String: Any]) -> String {
-        guard !parameters.isEmpty else { return "" }
-        
-        var result = [String]()
-        for (key, value) in parameters {
-            let string = "\(value)"
-            
-            guard let treated = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
-                assertionFailure(); continue
-            }
-            
-            result.append("\(key)=\(treated)")
-        }
-        
-        return "?\(result.joined(separator: "&"))"
-    }
-}

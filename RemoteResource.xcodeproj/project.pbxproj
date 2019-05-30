@@ -21,6 +21,7 @@
 		C838DCB5223AFAB70080F46C /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCB4223AFAB70080F46C /* Response.swift */; };
 		C838DCB7223AFADE0080F46C /* Resource.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCB6223AFADE0080F46C /* Resource.swift */; };
 		C838DCBB223C5A510080F46C /* ResponseValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C838DCBA223C5A510080F46C /* ResponseValidation.swift */; };
+		C8E78EA822A025A500B438E4 /* UrlHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E78EA722A025A500B438E4 /* UrlHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		C838DCB4223AFAB70080F46C /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		C838DCB6223AFADE0080F46C /* Resource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resource.swift; sourceTree = "<group>"; };
 		C838DCBA223C5A510080F46C /* ResponseValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseValidation.swift; sourceTree = "<group>"; };
+		C8E78EA722A025A500B438E4 /* UrlHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				C838DCA3223AEB4B0080F46C /* Info.plist */,
 				C838DCA2223AEB4B0080F46C /* RemoteResource.h */,
 				C838DCAA223AEB620080F46C /* Result.swift */,
+				C8E78EA722A025A500B438E4 /* UrlHelper.swift */,
 			);
 			path = aux;
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 				C81837AC223FF27C0064D8CA /* ResponseParser.swift in Sources */,
 				C81837A9223FEB110064D8CA /* URLRequestBuilder.swift in Sources */,
 				C81837AF223FF5130064D8CA /* NetworkManager.swift in Sources */,
+				C8E78EA822A025A500B438E4 /* UrlHelper.swift in Sources */,
 				C838DCB3223AFAAF0080F46C /* Request.swift in Sources */,
 				C838DCAD223AF12B0080F46C /* URLSessionDispatcher.swift in Sources */,
 				C838DCBB223C5A510080F46C /* ResponseValidation.swift in Sources */,

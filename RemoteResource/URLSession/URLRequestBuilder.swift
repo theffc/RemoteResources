@@ -62,7 +62,7 @@ struct URLRequestBuilderDefault: URLRequestBuilder {
     private func pathFor(parameters: RequestParameters, path: String) -> String {
         switch parameters {
         case .url(let parameters):
-            return URLHelper().stringWithSafelyEncodedParameters(parameters)
+            return UrlHelper().stringWithSafelyEncodedParameters(parameters)
             
         default:
             return path
