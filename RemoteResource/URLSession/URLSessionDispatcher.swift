@@ -85,19 +85,20 @@ public class URLSessionDispatcher: NetworkDispatcher {
 
 class URLHelper {
     
-    func escapedParameters(_ parameters: [String: Any]) -> String {
+    func stringWithSafelyEncodedParameters(_ parameters: [String: Any]) -> String {
         guard !parameters.isEmpty else { return "" }
         
-        var keyValuePairs = [String]()
+        var result = [String]()
         for (key, value) in parameters {
-            // make sure that it is a string value
-            let stringValue = "\(value)"
-            // escape it
-            let escapedValue = stringValue.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
-            // append it
-            keyValuePairs.append(key + "=" + "\(escapedValue!)")
+            let string = "\(value)"
+            
+            guard let treated = string.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else {
+                assertionFailure(); continue
+            }
+            
+            result.append("\(key)=\(treated)")
         }
-        return "?\(keyValuePairs.joined(separator: "&"))"
+        
+        return "?\(result.joined(separator: "&"))"
     }
-    
 }
