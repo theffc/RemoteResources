@@ -1,37 +1,40 @@
 //
-//  URLRequestBuilder.swift
+//  NetworkRequestBuilder.swift
 //  RemoteResource
 //
-//  Created by Frederico Franco on 18/03/19.
+//  Created by Frederico Franco on 30/05/19.
 //  Copyright © 2019 theffc. All rights reserved.
 //
 
 import Foundation
 
-protocol URLRequestBuilder {
+public protocol NetworkRequestBuilder {
 
     var configuration: NetworkConfiguration { get }
 
-    func buildUrlFor(request: ResourceRequest) -> URLRequest?
+    func buildUrlFor(request: ResourceRequest) -> UrlRequest?
+}
+
+public protocol UrlRequest {
+
+    var httpMethod: String? { get set }
+    var allHTTPHeaderFields: [String: String]? { get set }
+    var httpBody: Data? { get set }
+
+    init(url: URL)
 }
 
 
-struct URLRequestBuilderDefault: URLRequestBuilder {
-
-    let configuration: NetworkConfiguration
+public extension NetworkRequestBuilder {
     
-    init(configuration: NetworkConfiguration) {
-        self.configuration = configuration
-    }
-
-    func buildUrlFor(request: ResourceRequest) -> URLRequest? {
+    func buildUrlFor<UrlRequestType: UrlRequest>(request: ResourceRequest) -> UrlRequestType? {
         let path = pathFor(parameters: request.parameters, path: request.path)
         let parameters = bodyParametersFor(parameters: request.parameters)
         let headers = httpHeadersFor(optionalHeaders: request.headers)
         
         guard let url = getURLFor(path: path) else { return nil }
         
-        var urlRequest = URLRequest(url: url)
+        var urlRequest = UrlRequestType(url: url)
         
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = headers
@@ -41,6 +44,15 @@ struct URLRequestBuilderDefault: URLRequestBuilder {
     }
     
     // MARK: - Helpers
+    
+    private func getURLFor(path: String) -> URL? {
+        let string = configuration.baseURL.appendingPathComponent(path).absoluteString.removingPercentEncoding ?? ""
+        guard let requestUrl = URL(string: string) else {
+            return nil
+        }
+        
+        return requestUrl
+    }
     
     private func httpHeadersFor(
         optionalHeaders: [String: String]?
@@ -74,12 +86,4 @@ struct URLRequestBuilderDefault: URLRequestBuilder {
         return try? JSONSerialization.data(withJSONObject: parameters, options: [])
     }
     
-    private func getURLFor(path: String) -> URL? {
-        let string = configuration.baseURL.appendingPathComponent(path).absoluteString.removingPercentEncoding ?? ""
-        guard let requestUrl = URL(string: string) else {
-            return nil
-        }
-        
-        return requestUrl
-    }
 }

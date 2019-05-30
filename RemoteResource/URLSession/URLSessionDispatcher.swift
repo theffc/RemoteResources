@@ -8,12 +8,19 @@
 
 import Foundation
 
+extension URLRequest: UrlRequest {
+    
+    public init(url: URL) {
+        self = .init(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: .init(60.0))
+    }
+}
+
 public class URLSessionDispatcher: NetworkDispatcher {
     
     struct Input {
         let configuration: NetworkConfiguration
         let session: URLSessionProtocol
-        let urlRequestBuilder: URLRequestBuilder
+        let urlRequestBuilder: NetworkRequestBuilder
     }
     
     // MARK: - Properties
@@ -33,7 +40,7 @@ public class URLSessionDispatcher: NetworkDispatcher {
     // MARK: - Dispatch
     
     func dispatch(request: ResourceRequest, completion: @escaping Completion) {
-        guard let urlRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
+        guard let urlRequest: URLRequest = input.urlRequestBuilder.buildUrlFor(request: request) else {
             completion(NetworkResponse(
                 request: request, result: .failure(.couldNotResolveResourceIntoUrlRequest)
             ))

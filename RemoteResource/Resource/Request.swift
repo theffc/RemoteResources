@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ResourceRequest {
+public protocol ResourceRequest {
 
     /// Defines the endpoint we want to hit
     var path: String { get }
