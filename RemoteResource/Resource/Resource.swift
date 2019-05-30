@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol RemoteResource {
+public protocol RemoteResource {
 
     associatedtype Request: ResourceRequest
     associatedtype Response: ResourceResponse

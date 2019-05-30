@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum Result<Success, Failure> {
+public enum Result<Success, Failure> {
     case success(Success)
     case failure(Failure)
 }

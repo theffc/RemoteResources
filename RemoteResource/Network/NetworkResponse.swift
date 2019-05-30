@@ -8,32 +8,32 @@
 
 import Foundation
 
-struct NetworkResponse {
+public struct NetworkResponse {
     
     let request: ResourceRequest
     
     let result: ResultType
-    typealias ResultType = Result<Http, Error>
+    public typealias ResultType = Result<Http, Error>
     
-    struct Http {
+    public struct Http {
         let httpResponse: HTTPURLResponse
         let data: Data
     }
     
-    enum Error {
+    public enum Error {
         case couldNotResolveResourceIntoUrlRequest
         case networkError(Swift.Error)
         case serverError(ServerError)
         
         /// server treated your request as an error
-        struct ServerError {
+        public struct ServerError {
             let error: Swift.Error
             let httpResponse: Http
         }
     }
 }
 
-struct NetworkResponseForResource<Resource: RemoteResource> {
+public struct NetworkResponseForResource<Resource: RemoteResource> {
 
     let request: Resource.Request
     

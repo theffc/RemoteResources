@@ -8,33 +8,36 @@
 
 import Foundation
 
-public protocol NetworkRequestBuilder {
+public protocol NetworkRequestBuilderType {
 
-    var configuration: NetworkConfiguration { get }
+    var configuration: NetworkRequestBuilderConfig { get }
 
-    func buildUrlFor(request: ResourceRequest) -> UrlRequest?
+    func buildUrlFor(request: ResourceRequest) -> URLRequest?
 }
 
-public protocol UrlRequest {
+public struct NetworkRequestBuilderConfig {
 
-    var httpMethod: String? { get set }
-    var allHTTPHeaderFields: [String: String]? { get set }
-    var httpBody: Data? { get set }
-
-    init(url: URL)
+    let baseUrl: URL
+    let headers: [String: String]
 }
 
-
-public extension NetworkRequestBuilder {
+struct NetworkRequestBuilder: NetworkRequestBuilderType {
     
-    func buildUrlFor<UrlRequestType: UrlRequest>(request: ResourceRequest) -> UrlRequestType? {
+    let configuration: NetworkRequestBuilderConfig
+}
+
+// MARK: - Extension
+
+public extension NetworkRequestBuilderType {
+    
+    func buildUrlFor(request: ResourceRequest) -> URLRequest? {
         let path = pathFor(parameters: request.parameters, path: request.path)
         let parameters = bodyParametersFor(parameters: request.parameters)
         let headers = httpHeadersFor(optionalHeaders: request.headers)
         
         guard let url = getURLFor(path: path) else { return nil }
         
-        var urlRequest = UrlRequestType(url: url)
+        var urlRequest = URLRequest(url: url)
         
         urlRequest.httpMethod = request.method.rawValue
         urlRequest.allHTTPHeaderFields = headers
@@ -46,7 +49,7 @@ public extension NetworkRequestBuilder {
     // MARK: - Helpers
     
     private func getURLFor(path: String) -> URL? {
-        let string = configuration.baseURL.appendingPathComponent(path).absoluteString.removingPercentEncoding ?? ""
+        let string = configuration.baseUrl.appendingPathComponent(path).absoluteString.removingPercentEncoding ?? ""
         guard let requestUrl = URL(string: string) else {
             return nil
         }

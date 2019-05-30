@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol ResourceResponse: Decodable {
+public protocol ResourceResponse: Decodable {
 
 }

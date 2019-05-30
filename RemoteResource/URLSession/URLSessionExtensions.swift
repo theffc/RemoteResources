@@ -1,36 +1,19 @@
 //
-//  URLSessionProtocols.swift
+//  URLSessionExtensions.swift
 //  RemoteResource
 //
-//  Created by Frederico Franco on 18/03/19.
+//  Created by Frederico Franco on 30/05/19.
 //  Copyright © 2019 theffc. All rights reserved.
 //
 
 import Foundation
 
-public protocol URLSessionProtocol {
-
-    func dataTask(
-        with request: URLRequest,
-        completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
-    ) -> URLSessionDataTaskProtocol
-}
-
-public protocol URLSessionDataTaskProtocol {
-    func resume()
-    func cancel()
-}
-
-// MARK: - Extensions
-
-extension URLSessionDataTask: URLSessionDataTaskProtocol {}
-
-extension URLSession: URLSessionProtocol {
+extension URLSession: NetworkSessionType {
     
     public func dataTask(
         with request: URLRequest,
         completionHandler: @escaping (Data?, HTTPURLResponse?, Error?) -> Void
-    ) -> URLSessionDataTaskProtocol
+    ) -> NetworkSessionDataTask
     {
         let task = dataTask(with: request) { (data, response, error) in
             let http = response as? HTTPURLResponse
@@ -44,10 +27,13 @@ extension URLSession: URLSessionProtocol {
             }
         }
         
-        return task as URLSessionDataTaskProtocol
+        return task as NetworkSessionDataTask
     }
     
     struct ErrorResponseNotHttp: Error {
         let otherError: Error?
     }
+
 }
+
+extension URLSessionDataTask: NetworkSessionDataTask {}

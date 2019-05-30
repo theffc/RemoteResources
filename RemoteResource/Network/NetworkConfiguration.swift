@@ -2,26 +2,47 @@
 //  NetworkConfiguration.swift
 //  RemoteResource
 //
-//  Created by Frederico Franco on 18/03/19.
+//  Created by Frederico Franco on 30/05/19.
 //  Copyright © 2019 theffc. All rights reserved.
 //
 
 import Foundation
 
-public struct NetworkConfiguration {
+struct NetworkFactory {
     
-    /// Defines the environment name, ie. Production, Staging, Dev and so on
-    let name: String
+    let configuration: NetworkConfiguration
     
-    /// Here we can put the default headers that we need for all requests
-    let headers: [String: String]
+    func makeManager() -> NetworkManager {
+        let builder = configuration.builder ?? NetworkRequestBuilder(configuration: .init(
+            baseUrl: configuration.baseURL,
+            headers: configuration.headers
+        ))
+        
+        let dispatcher = configuration.dispatcher ?? NetworkDispatcher(configuration: .init(
+            builder: builder,
+            session: configuration.session
+        ))
+        
+        return NetworkManager(configuration: .init(
+            dispatcher: dispatcher,
+            responseParser: configuration.responseParser
+        ))
+    }
+}
+
+struct NetworkConfiguration {
+    
+    let id: String
     
     /// The base URL for the environment
     let baseURL: URL
     
-    public init(name: String, headers: [String: String] = [:], baseURL: URL) {
-        self.name = name
-        self.headers = headers
-        self.baseURL = baseURL
-    }
+    /// Here we can put the default headers that we need for all requests
+    let headers: [String: String]
+    
+    let responseParser: ResponseParserType = ResponseParser()
+    let session: NetworkSessionType = URLSession()
+    
+    let builder: NetworkRequestBuilderType?
+    let dispatcher: NetworkDispatcherType?
 }

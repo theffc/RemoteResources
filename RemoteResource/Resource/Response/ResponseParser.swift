@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol ResponseParser {
+protocol ResponseParserType {
 
     func parseResponse<Resource: RemoteResource>(
         _ response: NetworkResponse.Http,
@@ -21,8 +21,12 @@ enum ResponseParserError: Error {
     case couldNotParse(Error)
 }
 
-struct ResponseParserDefault: ResponseParser {
+struct ResponseParser: ResponseParserType {
 
+}
+
+extension ResponseParserType {
+    
     func parseResponse<Resource: RemoteResource>(
         _ response: NetworkResponse.Http,
         for resource: Resource
@@ -40,4 +44,5 @@ struct ResponseParserDefault: ResponseParser {
             return .failure(.couldNotParse(error))
         }
     }
+    
 }

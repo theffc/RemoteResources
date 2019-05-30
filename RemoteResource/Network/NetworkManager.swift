@@ -8,11 +8,9 @@
 
 import Foundation
 
-protocol NetworkManager {
-    
-    var dispatcher: NetworkDispatcher { get }
-    
-    var responseParser: ResponseParser { get }
+public protocol NetworkManagerType {
+
+    var configuration: NetworkManagerConfiguration { get }
     
     func request<Resource: RemoteResource>(
         resource: Resource,
@@ -20,27 +18,28 @@ protocol NetworkManager {
     )
 }
 
-class NetworkManagerDefault: NetworkManager {
+public struct NetworkManagerConfiguration {
     
-    let input: Input
+    let dispatcher: NetworkDispatcherType
+    let responseParser: ResponseParserType
+}
+
+public class NetworkManager: NetworkManagerType {
     
-    struct Input {
-        let dispatcher: NetworkDispatcher
-        let responseParser: ResponseParser
+    public let configuration: NetworkManagerConfiguration
+    
+    init(configuration: NetworkManagerConfiguration) {
+        self.configuration = configuration
     }
-    
-    init(input: Input) {
-        self.input = input
-    }
-    
-    var dispatcher: NetworkDispatcher { return input.dispatcher }
-    var responseParser: ResponseParser { return input.responseParser }
+}
+
+public extension NetworkManagerType {
     
     func request<Resource: RemoteResource>(
         resource: Resource,
         completion: @escaping (NetworkResponseForResource<Resource>) -> Void
     ) {
-        input.dispatcher.dispatch(request: resource.request) {
+        configuration.dispatcher.dispatch(request: resource.request) {
             let result: NetworkResponseForResource<Resource>.ResultType
             
             switch $0.result {
@@ -60,7 +59,7 @@ class NetworkManagerDefault: NetworkManager {
         for resource: Resource
     ) -> NetworkResponseForResource<Resource>.ResultType
     {
-        let parserResult = input.responseParser.parseResponse(httpResponse, for: resource)
+        let parserResult = configuration.responseParser.parseResponse(httpResponse, for: resource)
         
         switch parserResult {
         case .success(let parsed):

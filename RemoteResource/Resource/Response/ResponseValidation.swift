@@ -9,7 +9,7 @@
 import Foundation
 
 /// Represents the status codes to validate through Alamofire.
-enum ValidationType {
+public enum ValidationType {
     
     /// No validation.
     case none
@@ -24,7 +24,7 @@ enum ValidationType {
     case customCodes([Int])
 }
 
-extension ValidationType {
+public extension ValidationType {
     
     func isValidStatusCode(_ statusCode: Int) -> Bool {
         switch self {
